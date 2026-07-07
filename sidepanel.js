@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ? globalThis.ASHLY_DEV_CONFIG
     : {};
   const DEFAULT_BACKEND_URL =
-    "https://dom-metrics-analyzer-v2.onrender.com";
+    "https://lumina-chat-bot.onrender.com";
   const backendUrl = String(
     devConfig.enabled ? (devConfig.backendUrl || DEFAULT_BACKEND_URL) : DEFAULT_BACKEND_URL
   ).trim() || DEFAULT_BACKEND_URL;
