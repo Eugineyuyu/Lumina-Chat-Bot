@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  <title>Lumina</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="panel" id="authGate">
+      <div class="auth-header" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="28" height="28">
+              <rect width="128" height="128" rx="28" fill="#1c1c1f" />
+              <path d="M64 24 L72 56 L104 64 L72 72 L64 104 L56 72 L24 64 L56 56 Z" fill="#e57c65" />
+              <circle cx="64" cy="64" r="8" fill="#ffffff" />
+          </svg>
+          <h1 style="font-size: 22px; letter-spacing: 1px; margin: 0;">LUMINA</h1>
+        </div>
+        <p style="margin: 0; color: #9ca3af; font-size: 13px;">Use the side panel as the main workspace for capture, review, and reply drafting.</p>
+      </div>
+      <div class="auth-body">
+        <label for="authKey" class="auth-label">Client key</label>
+        <input id="authKey" class="auth-input" type="text" placeholder="Enter client key" spellcheck="false" autocomplete="off" style="font-family: monospace;">
+        <button id="unlockBtn" class="secondary-btn">Unlock</button>
+        <p id="authError" class="auth-error" role="alert" aria-live="polite"></p>
+        <button id="resetDeviceBtn" class="ghost-btn auth-reset-btn" type="button" style="display:none;">Reset device binding</button>
+      </div>
+    </div>
+
+    <div class="panel" id="appContent" style="display:none;">
+      <div class="panel-toolbar">
+        <button id="captureBtn" class="primary-btn">Capture & Analyze</button>
+        
+        <div style="display: flex; gap: 6px;">
+          <button id="headerThemeToggle" class="icon-btn" title="Toggle Dark/Light Mode">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
+          <button id="settingsToggle" class="icon-btn" aria-expanded="false" aria-controls="settingsPanel" title="Settings">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83 2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="settingsPanel" class="settings-panel" style="display:none;">
+        <div class="settings-overview">
+          <div class="settings-kicker">Workspace controls</div>
+          <h2 class="settings-heading">Tune how Lumina drafts, scores, and surfaces replies.</h2>
+          <p class="settings-summary">Capture stays the same. These controls only shape output quality, visibility, and review tooling.</p>
+        </div>
+        <div class="settings-block settings-account-block">
+          <div class="settings-section-head">
+            <div>
+              <div class="settings-title">Account</div>
+              <div class="settings-description">Live plan and usage status for the current client key.</div>
+            </div>
+          </div>
+          <div class="settings-stat-grid">
+            <span id="planBadge" class="plan-badge settings-stat">Plan</span>
+            <span id="successCounter" class="success-counter settings-stat">Requests: 0</span>
+            <span id="costCounter" class="cost-counter settings-stat">Sent: 0.00</span>
+            <span id="proFlashRemaining" class="usage-counter settings-stat" style="display:none;">Std left: -</span>
+            <span id="proProRemaining" class="usage-counter settings-stat" style="display:none;">Prem left: -</span>
+            <span id="proResetAt" class="usage-counter settings-stat" style="display:none;">Reset: -</span>
+          </div>
+        </div>
+        <div class="settings-primary-grid">
+          <div class="settings-block">
+            <div class="settings-section-head">
+              <div>
+                <div class="settings-title">Reply setup</div>
+                <div class="settings-description">Control output count, model strength, and the default tone pack.</div>
+              </div>
+            </div>
+            <div class="settings-row">
+              <label for="replyCountSelect" class="settings-label">Reply options</label>
+              <select id="replyCountSelect" class="settings-select">
+                <option value="1">1 reply</option>
+                <option value="2">2 replies</option>
+                <option value="3">3 replies</option>
+                <option value="4">4 replies</option>
+                <option value="5">5 replies</option>
+              </select>
+            </div>
+            <div class="settings-row">
+              <label for="modelSelect" class="settings-label">Model speed</label>
+              <select id="modelSelect" class="settings-select">
+                <option value="gemini-2.5-flash">Standard</option>
+                <option value="gemini-2.5-pro">Premium</option>
+              </select>
+            </div>
+            <div class="settings-row">
+              <label for="promptVariantSelect" class="settings-label">Style pack</label>
+              <select id="promptVariantSelect" class="settings-select">
+                <option value="v1">Candy Classic</option>
+                <option value="v2">Roxie Heat</option>
+                <option value="v3">Velvet Siren</option>
+              </select>
+            </div>
+            <label class="toggle-row">
+              <input id="showLogsToggle" type="checkbox">
+              <span>Show logbook suggestions</span>
+            </label>
+            <input id="themeToggle" type="checkbox" style="display:none;">
+            <div class="settings-help">Standard is faster. Premium is stronger. Candy Classic stays the baseline.</div>
+          </div>
+        </div>
+        <details class="settings-block dev-tools-block">
+          <summary class="settings-disclosure">Developer tools</summary>
+          <div class="dev-tools-body">
+            <label class="toggle-row">
+              <input id="showContextToggle" type="checkbox">
+              <span>Show context debug</span>
+            </label>
+            <label class="toggle-row">
+              <input id="showOverlayToggle" type="checkbox">
+              <span>Show DOM overlay</span>
+            </label>
+            <div class="settings-actions">
+              <button id="refreshOverlayBtn" class="ghost-btn">Refresh overlay</button>
+              <button id="scanDomBtn" class="ghost-btn">Download DOM scan</button>
+              <button id="scanLogbookBtn" class="ghost-btn">Scan logbook</button>
+              <button id="testLogbookBtn" class="ghost-btn">Add test log</button>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div id="statusSection" class="status-row" style="display:none;" role="status" aria-live="polite">
+        <span class="spinner" aria-hidden="true"></span>
+        <span>
+          <span id="statusLabel">Preparing...</span>
+          <span class="muted">Time: <span id="analysisTimer">0.0s</span></span>
+        </span>
+      </div>
+      <div id="errorBanner" class="error-banner" role="alert" aria-live="assertive" style="display:none; border-radius: 8px; margin-bottom: 8px;"></div>
+
+      <div id="replyContainer" class="reply-container" style="display:none;">
+        
+        <div class="action-row" style="margin-bottom: 8px;">
+          <button id="retryBtn" class="ghost-btn" disabled>Retry</button>
+          <button id="retryBestBtn" class="ghost-btn retry-pro-btn" disabled>
+            Retry Premium
+            <span id="retryBestCounter" class="retry-pro-badge" aria-live="polite"></span>
+          </button>
+          <button id="clearBtn" class="ghost-btn" disabled>Clear</button>
+          <div class="shortcut-hint" style="grid-column: 1 / -1; margin-top: 4px;">Shortcuts: Enter capture, 1-5 type, R retry, B pro, C clear</div>
+        </div>
+
+        <div class="reply-card" id="card1">
+          <div class="reply-header">
+            <span class="reply-title">Teasing</span>
+            <span id="replyScore1" class="reply-score score-unknown" style="display:none;">--</span>
+          </div>
+          <button id="reply1" class="reply-action"></button>
+        </div>
+
+        <div class="reply-card" id="card2">
+          <div class="reply-header">
+            <span class="reply-title">Direct</span>
+            <span id="replyScore2" class="reply-score score-unknown" style="display:none;">--</span>
+          </div>
+          <button id="reply2" class="reply-action"></button>
+        </div>
+
+        <div class="reply-card" id="card3">
+          <div class="reply-header">
+            <span class="reply-title">Casual</span>
+            <span id="replyScore3" class="reply-score score-unknown" style="display:none;">--</span>
+          </div>
+          <button id="reply3" class="reply-action"></button>
+        </div>
+
+        <div class="reply-card" id="card4">
+          <div class="reply-header">
+            <span class="reply-title">Supportive</span>
+            <span id="replyScore4" class="reply-score score-unknown" style="display:none;">--</span>
+          </div>
+          <button id="reply4" class="reply-action"></button>
+        </div>
+      </div>
+
+      <div id="toast" class="toast">Sent!</div>
+    </div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+  <script src="theme.js"></script>
+</body>
+</body>
+</html>
